@@ -14,12 +14,28 @@ load_nvm() {
   fi
 }
 
+# `nvm which current` follows whichever node is already first on PATH, so a
+# same-version binary such as /exec-daemon/node hides nvm. Resolve the
+# requested major and put that bin directory first.
+prepend_nvm_node() {
+  local want="$1"
+  local node_bin
+  node_bin="$(nvm which "$want")"
+  export PATH="$(dirname "$node_bin"):${PATH}"
+  hash -r
+}
+
 use_node() {
   local want="$1"
-  if command -v nvm >/dev/null 2>&1 || type nvm >/dev/null 2>&1; then
-    nvm use "$want" >/dev/null || nvm install "$want"
+  if ! type nvm >/dev/null 2>&1; then
+    echo "nvm is not available; node $(command -v node) $(node -v) (want ${want}.x)"
+    return 0
   fi
-  echo "node $(node -v) (want ${want}.x)"
+  if ! nvm use "$want"; then
+    nvm install "$want"
+  fi
+  prepend_nvm_node "$want"
+  echo "node $(command -v node) $(node -v) (want ${want}.x)"
 }
 
 resolve_openclimbing() {
@@ -46,13 +62,12 @@ fi
 
 echo "Installing OpenClimbing dependencies in $OC"
 use_node 22
+if ! command -v yarn >/dev/null 2>&1; then
+  npm install -g yarn@1.22.22
+fi
 if [[ -x "$OC/.cursor/cloud-agent-install.sh" ]]; then
   bash "$OC/.cursor/cloud-agent-install.sh"
 else
-  if ! command -v yarn >/dev/null 2>&1; then
-    echo "yarn is not on PATH" >&2
-    exit 1
-  fi
   (
     cd "$OC"
     yarn install --frozen-lockfile --network-timeout 600000
@@ -65,4 +80,10 @@ if [[ -f "$ROOT/package-lock.json" ]]; then
   npm ci
 else
   npm install
+fi
+
+# nvm install can retarget the default alias. Keep Node 22 so later login
+# shells still resolve the OpenClimbing yarn toolchain.
+if type nvm >/dev/null 2>&1; then
+  nvm alias default 22 >/dev/null
 fi

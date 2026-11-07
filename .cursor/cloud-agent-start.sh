@@ -3,6 +3,33 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
 
+load_nvm() {
+  export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+  # shellcheck disable=SC1091
+  if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+    . "$NVM_DIR/nvm.sh"
+  fi
+}
+
+# Match the app's engines.node (^22). Do not install here; install owns that.
+activate_node_22() {
+  load_nvm
+  if ! type nvm >/dev/null 2>&1; then
+    return 0
+  fi
+  if ! nvm use 22; then
+    echo "Node 22 is not installed; start is using $(command -v node) $(node -v)" >&2
+    return 0
+  fi
+  local node_bin
+  node_bin="$(nvm which 22)"
+  export PATH="$(dirname "$node_bin"):${PATH}"
+  hash -r
+  echo "start node $(command -v node) $(node -v)"
+}
+
+activate_node_22
+
 resolve_openclimbing() {
   local candidate
   for candidate in \

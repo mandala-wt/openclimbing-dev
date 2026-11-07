@@ -3,8 +3,8 @@
   "repositoryDependencies": [
     "github.com/mandala-wt/openclimbing"
   ],
-  "install": "bash .cursor/cloud-agent-install.sh",
-  "start": "bash .cursor/cloud-agent-start.sh",
+  "install": "[ ! -d '/agent/repos/openclimbing-dev' ] || cd '/agent/repos/openclimbing-dev' || exit $?\nbash .cursor/cloud-agent-install.sh",
+  "start": "[ ! -d '/agent/repos/openclimbing-dev' ] || cd '/agent/repos/openclimbing-dev' || exit $?\nbash .cursor/cloud-agent-start.sh",
   "ports": [
     {
       "name": "OpenClimbing",
