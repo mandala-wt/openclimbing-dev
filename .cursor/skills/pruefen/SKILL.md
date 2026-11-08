@@ -1,6 +1,12 @@
 ---
 name: pruefen
 description: Prüft behauptete Fertigarbeit mit dem Verifier. Nur lesen, nichts ändern.
+disable-model-invocation: true
+---
+
+---
+name: pruefen
+description: Prüft behauptete Fertigarbeit mit dem Verifier. Nur lesen, nichts ändern.
 ---
 
 Wende den Subagenten `verifier` an. Seine Anweisung steht in `.cursor/agents/verifier.md`.
