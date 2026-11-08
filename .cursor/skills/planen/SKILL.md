@@ -1,6 +1,12 @@
 ---
 name: planen
 description: Schreibt einen kurzen Plan mit dem Planner. Setzt nichts um.
+disable-model-invocation: true
+---
+
+---
+name: planen
+description: Schreibt einen kurzen Plan mit dem Planner. Setzt nichts um.
 ---
 
 Wende den Subagenten `planner` an. Seine Anweisung steht in `.cursor/agents/planner.md`.

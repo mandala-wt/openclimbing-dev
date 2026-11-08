@@ -1,6 +1,12 @@
 ---
 name: debuggen
 description: Sucht die Ursache eines Fehlers mit dem Debugger und macht den kleinsten Fix.
+disable-model-invocation: true
+---
+
+---
+name: debuggen
+description: Sucht die Ursache eines Fehlers mit dem Debugger und macht den kleinsten Fix.
 ---
 
 Wende den Subagenten `debugger` an. Seine Anweisung steht in `.cursor/agents/debugger.md`.
